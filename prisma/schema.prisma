@@ -1,0 +1,124 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  TENANT
+  LANDLORD
+  ADMIN
+}
+
+enum RequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  ACTIVE
+  COMPLETED
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+model User {
+  id               String            @id @default(uuid())
+  name             String
+  email            String            @unique
+  password         String
+  role             Role
+  isBanned         Boolean           @default(false)
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  properties       Property[]
+  rentalRequests   RentalRequest[]
+  reviews          Review[]
+}
+
+model Category {
+  id          String      @id @default(uuid())
+  name        String      @unique
+  createdAt   DateTime    @default(now())
+
+  properties  Property[]
+}
+
+model Property {
+  id               String             @id @default(uuid())
+  title            String
+  description      String
+  location         String
+  pricePerMonth    Float
+  amenities        String[]
+  isAvailable      Boolean            @default(true)
+
+  landlordId       String
+  categoryId       String
+
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+
+  landlord         User               @relation(fields: [landlordId], references: [id], onDelete: Cascade)
+  category         Category           @relation(fields: [categoryId], references: [id])
+
+  rentalRequests   RentalRequest[]
+  reviews          Review[]
+}
+
+model RentalRequest {
+  id               String             @id @default(uuid())
+
+  tenantId         String
+  propertyId       String
+
+  startDate        DateTime
+  endDate          DateTime
+
+  status           RequestStatus      @default(PENDING)
+
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+
+  tenant           User               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  property         Property           @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  payments         Payment[]
+}
+
+model Payment {
+  id                 String            @id @default(uuid())
+
+  rentalRequestId    String
+
+  amount             Float
+  currency           String            @default("BDT")
+  transactionId      String            @unique
+  method             String
+  status             PaymentStatus     @default(PENDING)
+
+  paidAt             DateTime?
+  createdAt          DateTime          @default(now())
+
+  rentalRequest      RentalRequest     @relation(fields: [rentalRequestId], references: [id], onDelete: Cascade)
+}
+
+model Review {
+  id               String        @id @default(uuid())
+
+  tenantId         String
+  propertyId       String
+
+  rating           Int
+  comment          String
+
+  createdAt        DateTime      @default(now())
+
+  tenant           User          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  property         Property      @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+}
