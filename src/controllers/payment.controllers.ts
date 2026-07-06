@@ -1,6 +1,6 @@
 import { Response, NextFunction } from 'express';
 import { AuthRequest } from '../middleware/auth';
-import  prisma  from '../config/prisma';
+import  {prisma}  from '../config/prisma';
 import Stripe from 'stripe';
 import { sendResponse } from '../utils/sendResponse';
 

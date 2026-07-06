@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import  prisma  from '../config/prisma';
+import  {prisma}  from '../config/prisma';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { sendResponse } from '../utils/sendResponse';
