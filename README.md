@@ -8,12 +8,6 @@ A secure RESTful Backend API for the RentNest application built with Express.js,
 
 https://your-live-server-url.com
 
-# 📂 GitHub Repository
-
-https://github.com/your-username/rentnest-backend
-
----
-
 # 🛠️ Technologies Used
 
 - Node.js
