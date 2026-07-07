@@ -1,83 +1,83 @@
-// import { Response, NextFunction } from 'express';
-// import { AuthRequest } from '../middleware/auth';
-// import  {prisma}  from '../config/prisma';
-// import Stripe from 'stripe';
-// import { sendResponse } from '../utils/sendResponse';
+import { Response, NextFunction } from 'express';
+import { AuthRequest } from '../middleware/auth';
+import  {prisma}  from '../config/prisma';
+import Stripe from 'stripe';
+import { sendResponse } from '../utils/sendResponse';
 
-// const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-//   apiVersion: '2025-01-27.acacian' as any,
-// });
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
+  apiVersion: '2025-01-27.acacian' as any,
+});
 
-// export const createPaymentIntent = async (req: AuthRequest, res: Response, next: NextFunction) => {
-//   try {
-//     const { rentalRequestId } = req.body;
+export const createPaymentIntent = async (req: AuthRequest, res: Response, next: NextFunction) => {
+  try {
+    const { rentalRequestId } = req.body;
 
-//     const rentalRequest = await prisma.rentalRequest.findUnique({
-//       where: { id: rentalRequestId },
-//       include: { property: true },
-//     });
+    const rentalRequest = await prisma.rentalRequest.findUnique({
+      where: { id: rentalRequestId },
+      include: { property: true },
+    });
 
-//     if (!rentalRequest || rentalRequest.status !== 'APPROVED') {
-//       throw new Error('Rental request is not approved yet.');
-//     }
+    if (!rentalRequest || rentalRequest.status !== 'APPROVED') {
+      throw new Error('Rental request is not approved yet.');
+    }
 
-//     const amountInCents = Math.round(rentalRequest.property.pricePerMonth * 100);
+    const amountInCents = Math.round(rentalRequest.property.pricePerMonth * 100);
 
-//     const paymentIntent = await stripe.paymentIntents.create({
-//       amount: amountInCents,
-//       currency: 'usd',
-//       metadata: { rentalRequestId, tenantId: req.user!.id },
-//     });
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: amountInCents,
+      currency: 'usd',
+      metadata: { rentalRequestId, tenantId: req.user!.id },
+    });
 
-//     await prisma.payment.create({
-//       data: {
-//         rentalRequestId,
-//         amount: rentalRequest.property.pricePerMonth,
-//         transactionId: paymentIntent.id,
-//         method: 'STRIPE',
-//         status: 'PENDING',
-//       },
-//     });
+    await prisma.payment.create({
+      data: {
+        rentalRequestId,
+        amount: rentalRequest.property.pricePerMonth,
+        transactionId: paymentIntent.id,
+        method: 'STRIPE',
+        status: 'PENDING',
+      },
+    });
 
-//     sendResponse(res, {
-//       statusCode: 200,
-//       success: true,
-//       message: 'Payment intent created successfully.',
-//       data: { clientSecret: paymentIntent.client_secret, transactionId: paymentIntent.id },
-//     });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+    sendResponse(res, {
+      statusCode: 200,
+      success: true,
+      message: 'Payment intent created successfully.',
+      data: { clientSecret: paymentIntent.client_secret, transactionId: paymentIntent.id },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
-// export const confirmPayment = async (req: AuthRequest, res: Response, next: NextFunction) => {
-//   try {
-//     const { transactionId } = req.body;
-//     const intent = await stripe.paymentIntents.retrieve(transactionId);
+export const confirmPayment = async (req: AuthRequest, res: Response, next: NextFunction) => {
+  try {
+    const { transactionId } = req.body;
+    const intent = await stripe.paymentIntents.retrieve(transactionId);
 
-//     if (intent.status === 'succeeded') {
-//       await prisma.$transaction(async (tx) => {
-//         const payment = await tx.payment.update({
-//           where: { transactionId },
-//           data: { status: 'COMPLETED', paidAt: new Date() },
-//         });
+    if (intent.status === 'succeeded') {
+      await prisma.$transaction(async (tx) => {
+        const payment = await tx.payment.update({
+          where: { transactionId },
+          data: { status: 'COMPLETED', paidAt: new Date() },
+        });
 
-//         await tx.rentalRequest.update({
-//           where: { id: payment.rentalRequestId },
-//           data: { status: 'ACTIVE' },
-//         });
-//       });
+        await tx.rentalRequest.update({
+          where: { id: payment.rentalRequestId },
+          data: { status: 'ACTIVE' },
+        });
+      });
 
-//       sendResponse(res, {
-//         statusCode: 200,
-//         success: true,
-//         message: 'Payment verified and rental is now ACTIVE!',
-//         data: null,
-//       });
-//     } else {
-//       throw new Error('Payment verification failed.');
-//     }
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+      sendResponse(res, {
+        statusCode: 200,
+        success: true,
+        message: 'Payment verified and rental is now ACTIVE!',
+        data: null,
+      });
+    } else {
+      throw new Error('Payment verification failed.');
+    }
+  } catch (error) {
+    next(error);
+  }
+};
