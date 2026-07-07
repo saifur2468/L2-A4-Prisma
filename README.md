@@ -9,8 +9,10 @@ A secure and scalable RESTful API for a House Rental Management System. This bac
 ```
 https://your-live-api-url.com
 ```
-
-
+# Postman Api collection 
+```
+https://github.com/saifur2468/L2-A4-Prisma/blob/main/PostmanAPI.readme
+```
 # 📖 Project Overview
 
 RentNest is a modern rental platform that connects Tenants and Landlords through a secure web application.
@@ -127,7 +129,7 @@ rentnest-backend/
 └── README.md
 ```
 
----
+
 
 
 
