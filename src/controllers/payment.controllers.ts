@@ -1,12 +1,10 @@
 import { Response, NextFunction } from 'express';
 import { AuthRequest } from '../middleware/auth';
-import  {prisma}  from '../config/prisma';
+import { prisma } from '../config/prisma';
 import Stripe from 'stripe';
 import { sendResponse } from '../utils/sendResponse';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-  apiVersion: '2025-01-27.acacian' as any,
-});
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
 export const createPaymentIntent = async (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
