@@ -1,0 +1,439 @@
+Public fetaures
+
+URL: http://localhost:5000/api/categories 
+
+{
+    "success": true,
+    "message": "Categories retrieved successfully!",
+    "data": [
+        {
+            "id": "1",
+            "name": "White House ",
+            "createdAt": "2026-07-05T18:00:00.000Z"
+        },
+        {
+            "id": "2",
+            "name": "borak place",
+            "createdAt": "2026-07-05T18:00:00.000Z"
+        },
+        {
+            "id": "3",
+            "name": "No House name",
+            "createdAt": "2026-07-06T15:20:31.739Z"
+        }
+    ]
+}
+
+
+
+http://localhost:5000/api/properties?location=Dhanmondi 
+
+{
+    "success": true,
+    "message": "Properties retrieved successfully!",
+    "data": [
+        {
+            "id": "c1ca0a1c-05c6-4b2c-9df4-6674ca9df945",
+            "title": "Beautiful 2BHK Apartment",
+            "description": "Near Dhanmondi Lake, full secured.",
+            "location": "Dhanmondi, Dhaka",
+            "pricePerMonth": 25000,
+            "amenities": [
+                "WiFi",
+                "Lift",
+                "Parking"
+            ],
+            "isAvailable": true,
+            "landlordId": "22f3bb5e-f645-4d68-bc71-b0a5bf3cb182",
+            "categoryId": "1",
+            "createdAt": "2026-07-06T15:35:47.552Z",
+            "updatedAt": "2026-07-06T15:35:47.552Z",
+            "category": {
+                "name": "White House "
+            }
+        }
+    ]
+}
+
+
+http://localhost:5000/api/auth/register 
+
+{
+    "success": true,
+    "message": "User registered successfully!",
+    "data": {
+        "id": "9a3fcb95-d167-40e6-b0f0-5a1330349af9",
+        "name": "Sai",
+        "email": "lanibo@gmail.com",
+        "role": "LANDLORD",
+        "createdAt": "2026-07-07T11:57:46.511Z"
+    }
+}
+
+
+http://localhost:5000/api/auth/login 
+
+{
+    "success": true,
+    "message": "User logged in successfully!",
+    "data": {
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjlhM2ZjYjk1LWQxNjctNDBlNi1iMGYwLTVhMTMzMDM0OWFmOSIsInJvbGUiOiJMQU5ETE9SRCIsImlhdCI6MTc4MzQyNTU4MiwiZXhwIjoxNzg0MDMwMzgyfQ.JI_DOlj4t3BvsXzJuEtP38-d9Vt2meYYOetpoJGaOoA"
+    }
+}
+
+
+Landlord Flow 
+
+http://localhost:5000/api/landlord/properties 
+
+{
+    "success": true,
+    "message": "Property listed successfully!",
+    "data": {
+        "id": "cf39c9c2-9c12-4712-b841-41a13ae23c6f",
+        "title": "Premium Bento Grid Studio",
+        "description": "Modern smart home with glassmorphism interior.",
+        "location": "Gulshan, Dhaka",
+        "pricePerMonth": 35000,
+        "amenities": [
+            "WiFi",
+            "AC",
+            "Smart Lock"
+        ],
+        "isAvailable": true,
+        "landlordId": "9a3fcb95-d167-40e6-b0f0-5a1330349af9",
+        "categoryId": "2",
+        "createdAt": "2026-07-07T12:12:04.977Z",
+        "updatedAt": "2026-07-07T12:12:04.977Z"
+    }
+}
+
+
+http://localhost:5000/api/rentals  
+{
+    "success": true,
+    "message": "Rental request submitted successfully!",
+    "data": {
+        "id": "415c4c55-9660-48f1-9df5-cd35abbb4308",
+        "tenantId": "69a22362-6b92-46d3-8237-74c13adf7976",
+        "propertyId": "cf39c9c2-9c12-4712-b841-41a13ae23c6f",
+        "startDate": "2026-08-01T00:00:00.000Z",
+        "endDate": "2027-08-01T00:00:00.000Z",
+        "status": "PENDING",
+        "createdAt": "2026-07-07T12:15:50.654Z",
+        "updatedAt": "2026-07-07T12:15:50.654Z"
+    }
+}
+http://localhost:5000/api/landlord/requests/415c4c55-9660-48f1-9df5-cd35abbb4308 
+{
+    "success": true,
+    "message": "Rental request has been approved!",
+    "data": {
+        "id": "415c4c55-9660-48f1-9df5-cd35abbb4308",
+        "tenantId": "69a22362-6b92-46d3-8237-74c13adf7976",
+        "propertyId": "cf39c9c2-9c12-4712-b841-41a13ae23c6f",
+        "startDate": "2026-08-01T00:00:00.000Z",
+        "endDate": "2027-08-01T00:00:00.000Z",
+        "status": "APPROVED",
+        "createdAt": "2026-07-07T12:15:50.654Z",
+        "updatedAt": "2026-07-07T12:21:34.561Z"
+    }
+}
+
+http://localhost:5000/api/payments/create 
+
+{
+    "success": true,
+    "message": "Payment intent created successfully.",
+    "data": {
+        "clientSecret": "pi_3TqY8SELHUOHzLYm1gRARAsy_secret_41WytB1WxGr7RgsLESe4nBaQq",
+        "transactionId": "pi_3TqY8SELHUOHzLYm1gRARAsy"
+    }
+}
+
+
+
+Admin get all user : 
+http://localhost:5000/api/admin/users 
+{
+    "success": true,
+    "message": "All users retrieved successfully!",
+    "data": [
+        {
+            "id": "cdd91eab-c6e2-47b6-b440-09e95091b533",
+            "name": "Saifur Rahman",
+            "email": "saifweb@gmail.com",
+            "role": "TENANT",
+            "isBanned": false,
+            "createdAt": "2026-07-06T14:16:06.527Z"
+        },
+        {
+            "id": "8b1ebdb9-0647-493f-9e5f-72b982b9307c",
+            "name": "SaifRahman",
+            "email": "saif14b@gmail.com",
+            "role": "TENANT",
+            "isBanned": false,
+            "createdAt": "2026-07-06T14:17:52.416Z"
+        },
+        {
+            "id": "b8d2976f-3d8c-4bd1-afda-59b0e70f2a0e",
+            "name": "adil hasan",
+            "email": "adil14@gmail.com",
+            "role": "TENANT",
+            "isBanned": false,
+            "createdAt": "2026-07-06T14:39:11.027Z"
+        },
+        {
+            "id": "19a42de1-3558-4145-a0c6-43537314a4d3",
+            "name": "saidur Rahman",
+            "email": "admin26@gmail.com",
+            "role": "ADMIN",
+            "isBanned": false,
+            "createdAt": "2026-07-06T14:42:56.214Z"
+        },
+        {
+            "id": "06d0aa59-3342-44be-a5f8-ab2b4a67dddd",
+            "name": "Anisur Rahman",
+            "email": "landlord@test.com",
+            "role": "LANDLORD",
+            "isBanned": false,
+            "createdAt": "2026-07-06T15:25:34.724Z"
+        },
+        {
+            "id": "bd4cefaa-041f-4083-ba01-3e1193171323",
+            "name": "Anisur Rahman",
+            "email": "landord@test.com",
+            "role": "LANDLORD",
+            "isBanned": false,
+            "createdAt": "2026-07-06T15:27:24.945Z"
+        },
+        {
+            "id": "22f3bb5e-f645-4d68-bc71-b0a5bf3cb182",
+            "name": "Anisur Rahman",
+            "email": "lanord@test.com",
+            "role": "LANDLORD",
+            "isBanned": false,
+            "createdAt": "2026-07-06T15:31:46.638Z"
+        },
+        {
+            "id": "38d3eca5-323b-4ddb-986c-9ba307b3d13e",
+            "name": "Saifur Rahman",
+            "email": "saifur.tenant@test.com",
+            "role": "TENANT",
+            "isBanned": false,
+            "createdAt": "2026-07-06T15:41:22.774Z"
+        },
+        {
+            "id": "3c5775a1-7300-4cca-91f2-8b7553a8101e",
+            "name": "Saifur Tenant",
+            "email": "tenant@test.com",
+            "role": "TENANT",
+            "isBanned": false,
+            "createdAt": "2026-07-07T06:40:30.423Z"
+        },
+        {
+            "id": "75812636-1ddb-4a88-931d-b0d395314017",
+            "name": "Sakib hasan",
+            "email": "sakib14@gmail.com",
+            "role": "LANDLORD",
+            "isBanned": false,
+            "createdAt": "2026-07-07T06:41:18.011Z"
+        },
+        {
+            "id": "0d9497a6-25f0-4cd7-87f8-225732e37eb1",
+            "name": "admin ali ",
+            "email": "adm26@gmail.com",
+            "role": "TENANT",
+            "isBanned": false,
+            "createdAt": "2026-07-07T06:43:30.894Z"
+        },
+        {
+            "id": "0a77e5b4-5699-4d98-a899-b5195f27eaea",
+            "name": "Anisur Rahman",
+            "email": "land@test.com",
+            "role": "LANDLORD",
+            "isBanned": false,
+            "createdAt": "2026-07-07T06:50:28.224Z"
+        },
+        {
+            "id": "5f224dee-ab4f-4db3-8656-aabc01bba12b",
+            "name": "Saifur Tenant",
+            "email": "kidibo@.com",
+            "role": "TENANT",
+            "isBanned": false,
+            "createdAt": "2026-07-07T11:56:08.808Z"
+        },
+        {
+            "id": "9a3fcb95-d167-40e6-b0f0-5a1330349af9",
+            "name": "Sai",
+            "email": "lanibo@gmail.com",
+            "role": "LANDLORD",
+            "isBanned": false,
+            "createdAt": "2026-07-07T11:57:46.511Z"
+        },
+        {
+            "id": "69a22362-6b92-46d3-8237-74c13adf7976",
+            "name": "Saifur Tenant",
+            "email": "rahim78@gmail.com",
+            "role": "TENANT",
+            "isBanned": false,
+            "createdAt": "2026-07-07T12:02:54.161Z"
+        }
+    ]
+}
+
+
+http://localhost:5000/api/admin/users/69a22362-6b92-46d3-8237-74c13adf7976 
+{
+    "success": true,
+    "message": "User has been banned successfully!",
+    "data": {
+        "id": "69a22362-6b92-46d3-8237-74c13adf7976",
+        "name": "Saifur Tenant",
+        "email": "rahim78@gmail.com",
+        "isBanned": true
+    }
+}
+
+{
+    "success": true,
+    "message": "User has been unbanned successfully!",
+    "data": {
+        "id": "69a22362-6b92-46d3-8237-74c13adf7976",
+        "name": "Saifur Tenant",
+        "email": "rahim78@gmail.com",
+        "isBanned": false
+    }
+}
+
+
+http://localhost:5000/api/admin/properties  
+{
+    "success": true,
+    "message": "All properties retrieved for Admin successfully!",
+    "data": [
+        {
+            "id": "c1ca0a1c-05c6-4b2c-9df4-6674ca9df945",
+            "title": "Beautiful 2BHK Apartment",
+            "description": "Near Dhanmondi Lake, full secured.",
+            "location": "Dhanmondi, Dhaka",
+            "pricePerMonth": 25000,
+            "amenities": [
+                "WiFi",
+                "Lift",
+                "Parking"
+            ],
+            "isAvailable": true,
+            "landlordId": "22f3bb5e-f645-4d68-bc71-b0a5bf3cb182",
+            "categoryId": "1",
+            "createdAt": "2026-07-06T15:35:47.552Z",
+            "updatedAt": "2026-07-06T15:35:47.552Z",
+            "landlord": {
+                "name": "Anisur Rahman",
+                "email": "lanord@test.com"
+            },
+            "category": {
+                "name": "White House "
+            }
+        },
+        {
+            "id": "d0dcc79b-7cd0-4197-b85b-549e226497e0",
+            "title": "Premium Bento Grid Studio",
+            "description": "Modern smart home with glassmorphism interior.",
+            "location": "Gulshan, Dhaka",
+            "pricePerMonth": 35000,
+            "amenities": [
+                "WiFi",
+                "AC",
+                "Smart Lock"
+            ],
+            "isAvailable": true,
+            "landlordId": "0a77e5b4-5699-4d98-a899-b5195f27eaea",
+            "categoryId": "3",
+            "createdAt": "2026-07-07T06:52:34.677Z",
+            "updatedAt": "2026-07-07T06:52:34.677Z",
+            "landlord": {
+                "name": "Anisur Rahman",
+                "email": "land@test.com"
+            },
+            "category": {
+                "name": "No House name"
+            }
+        },
+        {
+            "id": "cf39c9c2-9c12-4712-b841-41a13ae23c6f",
+            "title": "Premium Bento Grid Studio",
+            "description": "Modern smart home with glassmorphism interior.",
+            "location": "Gulshan, Dhaka",
+            "pricePerMonth": 35000,
+            "amenities": [
+                "WiFi",
+                "AC",
+                "Smart Lock"
+            ],
+            "isAvailable": true,
+            "landlordId": "9a3fcb95-d167-40e6-b0f0-5a1330349af9",
+            "categoryId": "2",
+            "createdAt": "2026-07-07T12:12:04.977Z",
+            "updatedAt": "2026-07-07T12:12:04.977Z",
+            "landlord": {
+                "name": "Sai",
+                "email": "lanibo@gmail.com"
+            },
+            "category": {
+                "name": "borak place"
+            }
+        }
+    ]
+}
+
+
+http://localhost:5000/api/admin/rentals 
+
+
+
+{
+    "success": true,
+    "message": "All rental requests retrieved for Admin successfully!",
+    "data": [
+        {
+            "id": "3162ec25-d11b-42a7-ab7f-46983fc54c26",
+            "tenantId": "0d9497a6-25f0-4cd7-87f8-225732e37eb1",
+            "propertyId": "d0dcc79b-7cd0-4197-b85b-549e226497e0",
+            "startDate": "2026-08-01T00:00:00.000Z",
+            "endDate": "2027-08-01T00:00:00.000Z",
+            "status": "PENDING",
+            "createdAt": "2026-07-07T07:00:48.689Z",
+            "updatedAt": "2026-07-07T07:00:48.689Z",
+            "tenant": {
+                "name": "admin ali ",
+                "email": "adm26@gmail.com"
+            },
+            "property": {
+                "title": "Premium Bento Grid Studio",
+                "pricePerMonth": 35000
+            }
+        },
+        {
+            "id": "415c4c55-9660-48f1-9df5-cd35abbb4308",
+            "tenantId": "69a22362-6b92-46d3-8237-74c13adf7976",
+            "propertyId": "cf39c9c2-9c12-4712-b841-41a13ae23c6f",
+            "startDate": "2026-08-01T00:00:00.000Z",
+            "endDate": "2027-08-01T00:00:00.000Z",
+            "status": "APPROVED",
+            "createdAt": "2026-07-07T12:15:50.654Z",
+            "updatedAt": "2026-07-07T12:21:34.561Z",
+            "tenant": {
+                "name": "Saifur Tenant",
+                "email": "rahim78@gmail.com"
+            },
+            "property": {
+                "title": "Premium Bento Grid Studio",
+                "pricePerMonth": 35000
+            }
+        }
+    ]
+}
+
+
+
