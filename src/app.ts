@@ -7,7 +7,12 @@ const app: Application = express();
 
 app.use(cors());
 app.use(express.json());
-
+app.get("/", (req, res) => {
+  res.json({
+    success: true,
+    message: "RentNest Backend Running"
+  });
+});
 // Main API Route
 app.use('/api', router);
 
