@@ -151,6 +151,16 @@ http://localhost:5000/api/payments/create
     }
 }
 
+ http://localhost:5000/api/payments/confirm
+
+{
+    "success":true,
+    "message":'payment verfied and rental is now active,
+    "data":null
+    
+}
+
+
 
 
 Admin get all user : 
