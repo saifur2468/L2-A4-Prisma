@@ -185,6 +185,30 @@ export const getLandlordProperties = async (req: AuthRequest, res: Response, nex
 };
 
 
+// export const updateProperty = async (req: AuthRequest, res: Response, next: NextFunction) => {
+//   try {
+//     const { id } = req.params;
+//     const landlordId = req.user!.id;
+
+//     const isOwnProperty = await prisma.property.findFirst({ where: { id, landlordId } });
+//     if (!isOwnProperty) throw new Error('Unauthorized or Property not found!');
+
+//     const updatedProperty = await prisma.property.update({
+//       where: { id },
+//       data: req.body,
+//     });
+
+//     sendResponse(res, {
+//       statusCode: 200,
+//       success: true,
+//       message: 'Property updated successfully!',
+//       data: updatedProperty,
+//     });
+//   } catch (error) {
+//     next(error);
+//   }
+// };
+
 export const updateProperty = async (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
@@ -193,9 +217,19 @@ export const updateProperty = async (req: AuthRequest, res: Response, next: Next
     const isOwnProperty = await prisma.property.findFirst({ where: { id, landlordId } });
     if (!isOwnProperty) throw new Error('Unauthorized or Property not found!');
 
+    
+    const { title, description, location, price, pricePerMonth, amenities, categoryId } = req.body;
+
     const updatedProperty = await prisma.property.update({
       where: { id },
-      data: req.body,
+      data: {
+        title,
+        description,
+        location,
+        pricePerMonth: pricePerMonth ? Number(pricePerMonth) : price ? Number(price) : undefined,
+        amenities,
+        categoryId,
+      },
     });
 
     sendResponse(res, {
