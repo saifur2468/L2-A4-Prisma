@@ -210,6 +210,84 @@ export const createPaymentIntent = async (
 // CONFIRM PAYMENT
 // ==========================================
 
+// export const confirmPayment = async (
+//   req: AuthRequest,
+//   res: Response,
+//   next: NextFunction
+// ) => {
+//   try {
+//     const { transactionId } = req.body;
+
+//     if (!transactionId) {
+//       throw new Error("Transaction ID is required.");
+//     }
+
+//     // Retrieve Stripe payment
+//     const intent = await stripe.paymentIntents.retrieve(transactionId);
+
+//     // ONLY succeeded is a successful payment
+//     if (intent.status !== "succeeded") {
+//       throw new Error(
+//         `Payment verification failed. Status: ${intent.status}`
+//       );
+//     }
+
+//     await prisma.$transaction(async (tx) => {
+//       // Find payment first
+//       const payment = await tx.payment.findUnique({
+//         where: {
+//           transactionId,
+//         },
+//         include: {
+//           rentalRequest: true,
+//         },
+//       });
+
+//       if (!payment) {
+//         throw new Error("Payment record not found.");
+//       }
+
+//       // Make sure this payment belongs to logged-in tenant
+//       if (payment.rentalRequest.tenantId !== req.user!.id) {
+//         throw new Error("You are not authorized for this payment.");
+//       }
+
+//       // Update payment
+//       await tx.payment.update({
+//         where: {
+//           transactionId,
+//         },
+//         data: {
+//           status: "COMPLETED",
+//           paidAt: new Date(),
+//         },
+//       });
+
+//       // Activate rental
+//       await tx.rentalRequest.update({
+//         where: {
+//           id: payment.rentalRequestId,
+//         },
+//         data: {
+//           status: "ACTIVE",
+//         },
+//       });
+//     });
+
+//     sendResponse(res, {
+//       statusCode: 200,
+//       success: true,
+//       message: "Payment verified and rental is now ACTIVE.",
+//       data: {
+//         transactionId,
+//         status: "COMPLETED",
+//       },
+//     });
+//   } catch (error) {
+//     next(error);
+//   }
+// };
+
 export const confirmPayment = async (
   req: AuthRequest,
   res: Response,
@@ -225,54 +303,47 @@ export const confirmPayment = async (
     // Retrieve Stripe payment
     const intent = await stripe.paymentIntents.retrieve(transactionId);
 
-    // ONLY succeeded is a successful payment
     if (intent.status !== "succeeded") {
       throw new Error(
         `Payment verification failed. Status: ${intent.status}`
       );
     }
 
-    await prisma.$transaction(async (tx) => {
-      // Find payment first
-      const payment = await tx.payment.findUnique({
-        where: {
-          transactionId,
-        },
-        include: {
-          rentalRequest: true,
-        },
-      });
+    await prisma.$transaction(
+      async (tx) => {
+        const payment = await tx.payment.findUnique({
+          where: { transactionId },
+          include: { rentalRequest: true },
+        });
 
-      if (!payment) {
-        throw new Error("Payment record not found.");
+        if (!payment) {
+          throw new Error("Payment record not found.");
+        }
+
+        if (payment.rentalRequest.tenantId !== req.user!.id) {
+          throw new Error("You are not authorized for this payment.");
+        }
+
+       
+        if (payment.status === "COMPLETED") {
+          return;
+        }
+
+        await tx.payment.update({
+          where: { transactionId },
+          data: { status: "COMPLETED", paidAt: new Date() },
+        });
+
+        await tx.rentalRequest.update({
+          where: { id: payment.rentalRequestId },
+          data: { status: "ACTIVE" },
+        });
+      },
+      {
+        maxWait: 10000, 
+        timeout: 15000, 
       }
-
-      // Make sure this payment belongs to logged-in tenant
-      if (payment.rentalRequest.tenantId !== req.user!.id) {
-        throw new Error("You are not authorized for this payment.");
-      }
-
-      // Update payment
-      await tx.payment.update({
-        where: {
-          transactionId,
-        },
-        data: {
-          status: "COMPLETED",
-          paidAt: new Date(),
-        },
-      });
-
-      // Activate rental
-      await tx.rentalRequest.update({
-        where: {
-          id: payment.rentalRequestId,
-        },
-        data: {
-          status: "ACTIVE",
-        },
-      });
-    });
+    );
 
     sendResponse(res, {
       statusCode: 200,
@@ -287,7 +358,6 @@ export const confirmPayment = async (
     next(error);
   }
 };
-
 // ==========================================
 // GET PAYMENT HISTORY
 // ==========================================
