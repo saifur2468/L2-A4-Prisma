@@ -14,7 +14,7 @@ export const handleChat = async (req: Request, res: Response) => {
     `;
 
     const response = await ai.models.generateContent({
-      model: 'gemini-3.8-flash',
+      model: 'gemini-1.5-pro',
       contents: messages,
       config: {
         systemInstruction,
