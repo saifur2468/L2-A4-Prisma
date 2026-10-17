@@ -55,6 +55,7 @@ model Property {
   title            String
   description      String
   location         String
+  images        String[] @default([])
   pricePerMonth    Float
   amenities        String[]
   isAvailable      Boolean            @default(true)

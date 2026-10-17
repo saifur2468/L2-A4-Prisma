@@ -24,17 +24,12 @@ import { sendResponse } from '../utils/sendResponse';
 //   }
 // };
 
-
-
-
-
-
 export const createProperty = async (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
     const { title, description, location, pricePerMonth, amenities, categoryId } = req.body;
     const landlordId = req.user!.id;
 
-    // Cloudinary থেকে পাওয়া ইমেজ URL এর অ্যারে তৈরি করা
+    
     let propertyImages: string[] = [];
     if (req.files && Array.isArray(req.files)) {
       propertyImages = req.files.map((file: any) => file.path);
@@ -51,7 +46,7 @@ export const createProperty = async (req: AuthRequest, res: Response, next: Next
         amenities: Array.isArray(amenities) ? amenities : amenities.split(',').map((item: string) => item.trim()),
         categoryId,
         landlordId,
-        images: propertyImages, // Prisma Schema-র images স্ট্রিং অ্যারেতে সেভ হবে
+        images: propertyImages,
       },
     });
 
