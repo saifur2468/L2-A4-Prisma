@@ -1,13 +1,12 @@
+import { Request, Response } from 'express';
 import { GoogleGenAI } from '@google/genai';
-import { NextResponse } from 'next/server';
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
-export async function POST(req: Request) {
+export const handleChat = async (req: Request, res: Response) => {
   try {
-    const { messages } = await req.json();
+    const { messages } = req.body;
 
-    
     const systemInstruction = `
       You are "RentNest Assistant", an AI helper for RentNest real estate platform.
       Help users find properties, understand rental processes, rent payments, and landlord/tenant roles.
@@ -22,12 +21,15 @@ export async function POST(req: Request) {
       },
     });
 
-    return NextResponse.json({ reply: response.text });
-  } catch (error) {
-    console.error('Chatbot API error:', error);
-    return NextResponse.json(
-      { error: 'Failed to generate response' },
-      { status: 500 }
-    );
+    res.status(200).json({
+      success: true,
+      reply: response.text,
+    });
+  } catch (error: any) {
+    console.error('Chat API Error:', error);
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Failed to generate response',
+    });
   }
-}
+};

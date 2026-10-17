@@ -1,5 +1,5 @@
 import { Router } from "express";
-
+import { handleChat } from '../controllers/chat.controller';
 import {
   registerUser,
   loginUser,
@@ -198,6 +198,6 @@ router.get(
   getAllRentalsForAdmin
 );
 
-
+router.post('/chat', handleChat);
 
 export default router;
