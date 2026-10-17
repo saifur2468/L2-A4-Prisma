@@ -26,8 +26,7 @@ export const getAllProperties = async (req: Request, res: Response, next: NextFu
         { description: { contains: String(search), mode: 'insensitive' } },
       ];
     }
-
-    const properties = await prisma.property.findMany({
+ const properties = await prisma.property.findMany({
       where: whereCondition,
       include: { category: { select: { name: true } } },
     });
