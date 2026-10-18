@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { handleChat } from '../controllers/chat.controller';
+import { handleAISearch } from '../controllers/search.controller';
 import {
   registerUser,
   loginUser,
@@ -199,5 +200,7 @@ router.get(
 );
 
 router.post('/chat', handleChat);
+
+router.post('/ai-search', handleAISearch);
 
 export default router;
